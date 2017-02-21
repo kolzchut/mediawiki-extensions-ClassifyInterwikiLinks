@@ -1,0 +1,6 @@
+{
+	"@metadata": {
+		"authors": []
+	},
+	"classifyinterwikilinks-desc": "This extension is used to add css classes that designate the destination for each interwiki link"
+}
