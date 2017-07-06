@@ -50,6 +50,7 @@ class ClassifyInterwikiLinksHooks {
 			$finalTarget = $page->getRedirectTarget();
 		}
 
+		isset( $attribs['class'] ) || $attribs['class'] = "";
 		if ( $finalTarget->isExternal() ) {
 			$interwiki = $finalTarget->getInterwiki();
 			// Did we get here through a redirect? Mark it as so:
