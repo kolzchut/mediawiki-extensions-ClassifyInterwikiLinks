@@ -51,7 +51,7 @@ class ClassifyInterwikiLinksHooks {
 		}
 
 		isset( $attribs['class'] ) || $attribs['class'] = "";
-		if ( $finalTarget->isExternal() ) {
+		if ( $finalTarget && $finalTarget->isExternal() ) {
 			$interwiki = $finalTarget->getInterwiki();
 			// Did we get here through a redirect? Mark it as so:
 			$attribs['class'] .= $originalTarget->isRedirect() ? ' mw-redirect-extiw' : '';
