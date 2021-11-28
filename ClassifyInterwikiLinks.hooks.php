@@ -1,4 +1,8 @@
 <?php
+
+use MediaWiki\Linker\LinkRenderer;
+use MediaWiki\Linker\LinkTarget;
+
 /**
  * Hooks for ClassifyInterwikiLinks extension
  *
@@ -30,18 +34,24 @@ class ClassifyInterwikiLinksHooks {
 	 * If the link is to a redirect to an external interwiki, add both the above class *and*
 	 * .mw-redirect-extiw;
 	 *
-	 * @param $dummy
-	 * @param Title $originalTarget
-	 * @param array $options
-	 * @param $text
-	 * @param array $attribs
-	 * @param $ret
+	 * HtmlPageLinkRendererEnd hook handler
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/HtmlPageLinkRendererEnd
+	 *
+	 * Used to change interwiki links
+	 *
+	 * @param LinkRenderer $linkRenderer
+	 * @param LinkTarget $target
+	 * @param $isKnown
+	 * @param &$text
+	 * @param &$attribs []
+	 * @param &$ret
 	 *
 	 * @return bool
 	 */
-	public static function onLinkEnd(
-		$dummy, Title $originalTarget, array $options, &$text, array &$attribs, &$ret
+	public static function onHtmlPageLinkRendererEnd(
+		LinkRenderer $linkRenderer, LinkTarget $target, $isKnown, &$text, &$attribs, &$ret
 	) {
+		$originalTarget = Title::newFromLinkTarget( $target );
 		$finalTarget = $originalTarget;
 		if ( self::getConfig()->get( 'ClassifyInterwikiLinksFollowRedirects' )
 		     && $originalTarget->isRedirect()

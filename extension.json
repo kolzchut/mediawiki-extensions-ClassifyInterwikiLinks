@@ -15,8 +15,8 @@
 		"ClassifyInterwikiLinksHooks": "ClassifyInterwikiLinks.hooks.php"
 	},
 	"Hooks": {
-		"LinkEnd": [
-			"ClassifyInterwikiLinksHooks::onLinkEnd"
+		"HtmlPageLinkRendererEnd": [
+			"ClassifyInterwikiLinksHooks::onHtmlPageLinkRendererEnd"
 		]
 	},
 	"ConfigRegistry": {
