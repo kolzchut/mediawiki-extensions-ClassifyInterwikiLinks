@@ -1,34 +1,43 @@
 {
 	"name": "ClassifyInterwikiLinks",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"author": [
-		"Dror S. [FFS] ([http://www.kolzchut.org.il Kol-Zchut])"
+		"Dror S. [FFS] ([https://www.kolzchut.org.il Kol-Zchut])"
 	],
 	"url": "https://github.com/kolzchut/mediawiki-extensions-ClassifyInterwikiLinks",
 	"descriptionmsg": "classifyinterwikilinks-desc",
-	"license-name": "GPL-2.0+",
+	"license-name": "GPL-2.0-or-later",
 	"type": "other",
 	"requires": {
-		"MediaWiki": ">= 1.27.0"
+		"MediaWiki": ">= 1.35.0"
 	},
-	"AutoloadClasses": {
-		"ClassifyInterwikiLinksHooks": "ClassifyInterwikiLinks.hooks.php"
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\ClassifyInterwikiLinks\\": "src/"
+	},
+	"HookHandlers": {
+		"main": {
+			"class": "MediaWiki\\Extension\\ClassifyInterwikiLinks\\Hooks",
+			"services": [
+				"ConfigFactory",
+				"WikiPageFactory"
+			]
+		}
 	},
 	"Hooks": {
-		"HtmlPageLinkRendererEnd": [
-			"ClassifyInterwikiLinksHooks::onHtmlPageLinkRendererEnd"
-		]
+		"HtmlPageLinkRendererEnd": "main"
 	},
 	"ConfigRegistry": {
 		"ClassifyInterwikiLinks": "GlobalVarConfig::newInstance"
 	},
 	"config": {
-		"ClassifyInterwikiLinksFollowRedirects": "true"
+		"ClassifyInterwikiLinksFollowRedirects": {
+			"value": true
+		}
 	},
 	"MessagesDirs": {
 		"ClassifyInterwikiLinks": [
 			"i18n"
 		]
 	},
-	"manifest_version": 1
+	"manifest_version": 2
 }
