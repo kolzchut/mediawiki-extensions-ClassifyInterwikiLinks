@@ -19,7 +19,7 @@
 			"class": "MediaWiki\\Extension\\ClassifyInterwikiLinks\\Hooks",
 			"services": [
 				"ConfigFactory",
-				"WikiPageFactory"
+				"RedirectLookup"
 			]
 		}
 	},

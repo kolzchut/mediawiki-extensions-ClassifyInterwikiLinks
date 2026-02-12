@@ -5,51 +5,35 @@ namespace MediaWiki\Extension\ClassifyInterwikiLinks;
 use Config;
 use MediaWiki\Config\ConfigFactory;
 use MediaWiki\Linker\Hook\HtmlPageLinkRendererEndHook;
-use MediaWiki\Linker\LinkRenderer;
-use MediaWiki\Linker\LinkTarget;
-use MediaWiki\Page\WikiPageFactory;
+use MediaWiki\Page\RedirectLookup;
 use MediaWiki\Title\Title;
 
 /**
  * Hooks for ClassifyInterwikiLinks extension
- *
- * @file
- * @ingroup Extensions
  */
 class Hooks implements HtmlPageLinkRendererEndHook {
 
 	private Config $config;
-	private WikiPageFactory $wikiPageFactory;
+	private RedirectLookup $redirectLookup;
 
 	/**
 	 * @param ConfigFactory $configFactory
-	 * @param WikiPageFactory $wikiPageFactory
+	 * @param RedirectLookup $redirectLookup
 	 */
 	public function __construct(
 		ConfigFactory $configFactory,
-		WikiPageFactory $wikiPageFactory
+		RedirectLookup $redirectLookup
 	) {
 		$this->config = $configFactory->makeConfig( 'ClassifyInterwikiLinks' );
-		$this->wikiPageFactory = $wikiPageFactory;
+		$this->redirectLookup = $redirectLookup;
 	}
 
 	/**
 	 * If the link is to an external interwiki, add a class with that interwiki prefix.
 	 * If the link is to a redirect to an external interwiki, add both the above class *and*
-	 * .mw-redirect-extiw;
+	 * .mw-redirect-extiw
 	 *
-	 * HtmlPageLinkRendererEnd hook handler
-	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/HtmlPageLinkRendererEnd
-	 *
-	 * Used to change interwiki links
-	 *
-	 * @param LinkRenderer $linkRenderer
-	 * @param LinkTarget $target
-	 * @param bool|null $isKnown
-	 * @param string|null &$text
-	 * @param array &$attribs
-	 * @param mixed &$ret
-	 * @return void
+	 * @inheritDoc
 	 */
 	public function onHtmlPageLinkRendererEnd(
 		$linkRenderer,
@@ -65,9 +49,9 @@ class Hooks implements HtmlPageLinkRendererEndHook {
 		if ( $this->config->get( 'ClassifyInterwikiLinksFollowRedirects' )
 			&& $originalTarget->isRedirect()
 		) {
-			$page = $this->wikiPageFactory->newFromID( $originalTarget->getArticleID() );
-			if ( $page ) {
-				$finalTarget = $page->getRedirectTarget();
+			$redirectTarget = $this->redirectLookup->getRedirectTarget( $originalTarget );
+			if ( $redirectTarget ) {
+				$finalTarget = $redirectTarget;
 			}
 		}
 
@@ -78,11 +62,10 @@ class Hooks implements HtmlPageLinkRendererEndHook {
 		if ( $finalTarget && $finalTarget->isExternal() ) {
 			$interwiki = $finalTarget->getInterwiki();
 			// Did we get here through a redirect? Mark it as so:
-			if ( $originalTarget->isRedirect() ) {
+			if ( isset( $redirectTarget ) && $redirectTarget ) {
 				$attribs['class'] .= ' mw-redirect-extiw';
 			}
 			$attribs['class'] .= ' extiw-' . $interwiki;
 		}
 	}
 }
-
