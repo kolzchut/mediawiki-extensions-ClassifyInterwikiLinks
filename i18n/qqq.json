@@ -1,7 +1,6 @@
 {
 	"@metadata": {
-		"authors": [
-		]
-	}
-
+		"authors": []
+	},
+	"classifyinterwikilinks-desc": "{{desc|name=ClassifyInterwikiLinks|url=https://github.com/kolzchut/mediawiki-extensions-ClassifyInterwikiLinks}}"
 }
